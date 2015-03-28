@@ -3,6 +3,7 @@ package org.monolith.exp;
 import com.cedarsoftware.util.io.JsonReader;
 import com.cedarsoftware.util.io.JsonWriter;
 
+import java.io.IOException;
 import java.sql.Wrapper;
 import java.util.Date;
 import java.util.UUID;
@@ -10,7 +11,7 @@ import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.monolith.exp.WritableObject;
+import org.monolith.exp.utils.ProcessWatcher;
 import redis.clients.jedis.Jedis;
 
 import javax.persistence.EntityManager;
@@ -21,6 +22,19 @@ import javax.persistence.Persistence;
 public class App {
 
     private static Jedis client = new Jedis("localhost", 6379);
+
+    private static Logger logger = Logger.getLogger(App.class.getName());
+
+    public static void playWithProcesses() {
+
+        ProcessWatcher prunner = new ProcessWatcher("C:\\JavaProjects\\chromedriver_win32\\", "chromedriver.exe", logger);
+
+        try {
+            prunner.runProcess();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void playWithTime() {
 
@@ -99,5 +113,6 @@ public class App {
         System.out.println("POST WRITE FROM REDIS->" + "(" +  uid + ")" + "=" + redisObject.toString());
 
         playWithTime();
+        playWithProcesses();
     }
 }
